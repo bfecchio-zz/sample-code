@@ -14,7 +14,7 @@ namespace CustomerManager.Core.Services
         Task<TEntity> Get(string id);
         Task<IEnumerable<TEntity>> GetAll();
         Task Create(TEntity entity);
-        Task<bool> Update(TEntity entity);
+        Task<bool> Update(string id, TEntity entity);
         Task<bool> Delete(string id);
 
         #endregion

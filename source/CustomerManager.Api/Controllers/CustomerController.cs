@@ -65,13 +65,15 @@ namespace CustomerManager.Api.Controllers
         {
             var entity = await _customerService.Get(id);
             if (entity == null) return NotFound();
+            
+            try
+            {
+                await _customerService.Update(id, customer);
+                return new OkObjectResult(customer);
+            }
+            catch (ValidationException) { }
 
-            customer.Id = entity.Id;
-            customer.DateCreated = entity.DateCreated;
-
-            await _customerService.Update(customer);
-
-            return new OkObjectResult(customer);
+            return new BadRequestResult();
         }
 
         [HttpDelete("{id}")]

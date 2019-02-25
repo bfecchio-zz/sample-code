@@ -35,7 +35,9 @@ namespace CustomerManager.Core.Services.Impl
         {
             await _validator.ValidateAndThrowAsync(entity);
 
+            entity.Id = null;
             entity.DateCreated = DateTime.Now;
+
             await _repository.Create(entity);
         }
 
@@ -54,11 +56,13 @@ namespace CustomerManager.Core.Services.Impl
             return await _repository.GetAll();
         }
 
-        public virtual async Task<bool> Update(TEntity entity)
+        public virtual async Task<bool> Update(string id, TEntity entity)
         {
             await _validator.ValidateAndThrowAsync(entity);
 
+            entity.Id = id;
             entity.DateUpdated = DateTime.Now;
+
             return await _repository.Update(entity);
         }
 

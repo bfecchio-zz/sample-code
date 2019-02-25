@@ -107,16 +107,26 @@ namespace CustomerManager.Tests.Services
             return await Task.Run(() => _customers.ToArray());
         }
 
-        public async Task<bool> Update(Customer entity)
+        public async Task<bool> Update(string id, Customer entity)
         {
             await _validator.ValidateAndThrowAsync(entity);
 
             return await Task.Run(() => {
-                var exists = _customers.FirstOrDefault(x => x.Id.Equals(entity.Id));
+                var exists = _customers.FirstOrDefault(x => x.Id.Equals(id));
                 if (exists == null) return false;
-
-                entity.DateUpdated = DateTime.Now;
-                exists = entity;
+                
+                exists.Name = entity.Name;
+                exists.Birthday = entity.Birthday;
+                exists.DocumentId = entity.DocumentId;
+                exists.SocialSecurityId = entity.SocialSecurityId;
+                exists.Phones = entity.Phones;
+                exists.Addresses = entity.Addresses;
+                exists.Facebook = entity.Facebook;
+                exists.LinkedIn = entity.LinkedIn;
+                exists.Twitter = entity.Twitter;
+                exists.Instagram = entity.Instagram;
+                entity.DateUpdated = entity.DateUpdated;
+                                
                 return true;
             });
         }
@@ -124,3 +134,4 @@ namespace CustomerManager.Tests.Services
         #endregion
     }
 }
+

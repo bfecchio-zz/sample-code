@@ -1,4 +1,5 @@
 using Xunit;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,6 @@ using CustomerManager.Core.Entities;
 using CustomerManager.Core.Services;
 using CustomerManager.Tests.Services;
 using CustomerManager.Api.Controllers;
-using System;
 using CustomerManager.Core.Enumeration.Customer;
 
 namespace CustomerManager.Tests.Controllers
@@ -119,7 +119,123 @@ namespace CustomerManager.Tests.Controllers
             Assert.Contains(collection, x => x.Id.Equals(customer.Id));
         }
 
-        
+        [Fact]
+        public async Task Put_WhenCalled_WithEmptyId_ReturnsNotFoundResult()
+        {
+            var customer = new Customer();
+            var output = await _controller.Put("", customer);
+
+            Assert.IsType<NotFoundResult>(output);
+        }
+
+        [Fact]
+        public async Task Put_WhenCalled_WithNullId_ReturnsNotFoundResult()
+        {
+            var customer = new Customer();
+            var output = await _controller.Put(null, customer);
+
+            Assert.IsType<NotFoundResult>(output);
+        }
+
+        [Fact]
+        public async Task Put_WhenCalled_WithNotFoundId_ReturnsNotFoundResult()
+        {
+            var customer = new Customer {
+                Id = Guid.NewGuid().ToString().Replace("-", "")
+            };
+
+            var output = await _controller.Put(customer.Id, customer);
+
+            Assert.IsType<NotFoundResult>(output);
+        }
+
+        [Fact]
+        public async Task Put_WhenCalled_WithValidIdAndEmptyFields_ReturnsBadRequestResult()
+        {
+            var customer = new Customer
+            {
+                Id = "6c8972b01d39ea2b383e6ab5"
+            };
+
+            var output = await _controller.Put(customer.Id, customer);
+
+            Assert.IsType<BadRequestResult>(output);
+        }
+
+        [Fact]
+        public async Task Put_WhenCalled_ReturnsOkObjectResult()
+        {
+            var customer = new Customer()
+            {
+                Id = "6c8972b01d39ea2b383e6ab5",
+                Name = "Pessoa X",
+                Birthday = DateTime.Now.AddYears(-15),
+                DocumentId = "25.233.978-3",
+                SocialSecurityId = "451.339.254-20",
+                Phones = new CustomerPhone[]{
+                        new CustomerPhone("(+5511) 98888-8888", PhoneType.CellPhone),
+                        new CustomerPhone("(+5511) 5555-5555", PhoneType.Residential),
+                    },
+                Addresses = new CustomerAddress[]{
+                        new CustomerAddress("Avenida C", AddressType.Commercial),
+                        new CustomerAddress("Alameda D", AddressType.Residential),
+                    },
+                Facebook = "https://fb.com/pessoa-b",
+                LinkedIn = "https://linkedin.com/in/pessoa-b",
+                Twitter = "https://twitter.com/pessoa-b",
+                Instagram = "https://instagram.com/pessoa-b",
+                DateUpdated = DateTime.Now.Date
+            };
+
+            var output = await _controller.Put(customer.Id, customer);
+
+            Assert.IsType<OkObjectResult>(output);
+            var result = await _controller.Get(customer.Id);
+            var entity = Assert.IsType<Customer>((result as OkObjectResult).Value);
+
+            Assert.NotNull(entity);
+            Assert.Equal(entity.Id, customer.Id);
+            Assert.Equal(entity.Name, customer.Name);
+            Assert.Equal(entity.DateUpdated?.Date, customer.DateUpdated?.Date);
+        }
+
+        [Fact]
+        public async Task Delete_WhenCalled_WithEmptyId_ReturnNotFoundResult()
+        {
+            var output = await _controller.Delete("");
+
+            Assert.IsType<NotFoundResult>(output);
+        }
+
+        [Fact]
+        public async Task Delete_WhenCalled_WithNullId_ReturnNotFoundResult()
+        {
+            var output = await _controller.Delete(null);
+
+            Assert.IsType<NotFoundResult>(output);
+        }
+
+        [Fact]
+        public async Task Delete_WhenCalled_WithInvalidId_ReturnNotFoundResult()
+        {
+            var output = await _controller.Delete("xxx");
+
+            Assert.IsType<NotFoundResult>(output);
+        }
+
+        [Fact]
+        public async Task Delete_WhenCalled_ReturnOkResult()
+        {
+            var id = "6c8972b01d39ea2b383e6ab5";
+            var output = await _controller.Delete(id);
+
+            Assert.IsType<OkResult>(output);
+
+            var result = await _controller.Get();
+            var collection = Assert.IsAssignableFrom<IEnumerable<Customer>>((result as OkObjectResult).Value);
+
+            Assert.DoesNotContain(collection, x => x.Id.Equals(id));
+        }
 
         #endregion
     }
