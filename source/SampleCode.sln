@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerManager.Api", "Cust
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomerManager.Core", "CustomerManager.Core\CustomerManager.Core.csproj", "{21FE8DBF-EAF5-4B5A-AF0B-1B7739AB262E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{60B87384-FDBA-4CFB-8C27-CB57CFF99A85}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{F8097A60-89D8-40D7-95C8-2EFC457A0B62}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomerManager.Tests", "CustomerManager.Tests\CustomerManager.Tests.csproj", "{92E1D892-8174-4D8C-A47E-2F7EBDACE50E}"
 EndProject
 Global
@@ -34,11 +30,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5FEEC6DC-FDB9-47DE-9226-2BD5C02397B8} = {60B87384-FDBA-4CFB-8C27-CB57CFF99A85}
-		{21FE8DBF-EAF5-4B5A-AF0B-1B7739AB262E} = {60B87384-FDBA-4CFB-8C27-CB57CFF99A85}
-		{92E1D892-8174-4D8C-A47E-2F7EBDACE50E} = {60B87384-FDBA-4CFB-8C27-CB57CFF99A85}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {666AD4AF-F616-494F-915B-4CD78C7A5735}
