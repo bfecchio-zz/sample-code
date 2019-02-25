@@ -6,7 +6,7 @@ using CustomerManager.Core.Repositories;
 
 namespace CustomerManager.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/customers")]
     [ApiController]
     public class CustomerController : ControllerBase
     {
@@ -29,7 +29,6 @@ namespace CustomerManager.Api.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get()
-
         {
             var result = await _customerRepository.GetAll();
             return Ok(result);

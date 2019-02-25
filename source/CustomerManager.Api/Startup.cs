@@ -33,6 +33,7 @@ namespace CustomerManager.Api
 
             #endregion
 
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -49,7 +50,7 @@ namespace CustomerManager.Api
                 app.UseHsts();
             }
 
-            app.UseCors();            
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());            
             app.UseMvc();
         }
     }
