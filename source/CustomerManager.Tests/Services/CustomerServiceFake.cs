@@ -4,7 +4,10 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using CustomerManager.Core.Entities;
 using CustomerManager.Core.Services;
+using CustomerManager.Core.Validators;
+using CustomerManager.Core.Validators.Impl;
 using CustomerManager.Core.Enumeration.Customer;
+using FluentValidation;
 
 namespace CustomerManager.Tests.Services
 {
@@ -13,6 +16,7 @@ namespace CustomerManager.Tests.Services
         #region Private Read-Only Fields
 
         private List<Customer> _customers;
+        private ICustomerValidator _validator;
 
         #endregion
 
@@ -20,6 +24,8 @@ namespace CustomerManager.Tests.Services
 
         public CustomerServiceFake()
         {
+            this._validator = new CustomerValidator();
+
             this._customers = new List<Customer> {
                 new Customer(){
                     Id = "5c7432b01d39ea2b383e6ac3",
@@ -71,7 +77,13 @@ namespace CustomerManager.Tests.Services
        
         public async Task Create(Customer entity)
         {
-            await Task.Run(() => _customers.Add(entity));
+            await _validator.ValidateAndThrowAsync(entity);            
+            await Task.Run(() => {
+                entity.Id = Guid.NewGuid().ToString().Replace("-", "");
+                entity.DateCreated = DateTime.Now;
+
+                _customers.Add(entity);
+            });
         }
 
         public async Task<bool> Delete(string id)
@@ -97,10 +109,13 @@ namespace CustomerManager.Tests.Services
 
         public async Task<bool> Update(Customer entity)
         {
+            await _validator.ValidateAndThrowAsync(entity);
+
             return await Task.Run(() => {
                 var exists = _customers.FirstOrDefault(x => x.Id.Equals(entity.Id));
                 if (exists == null) return false;
 
+                entity.DateUpdated = DateTime.Now;
                 exists = entity;
                 return true;
             });

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CustomerManager.Core.Entities;
 using CustomerManager.Core.Services;
+using FluentValidation;
 
 namespace CustomerManager.Api.Controllers
 {
@@ -46,8 +47,17 @@ namespace CustomerManager.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Customer customer)
         {
-            await _customerService.Create(customer);
-            return new OkObjectResult(customer);
+            if (customer == null)
+                return new BadRequestResult();
+            
+            try
+            {
+                await _customerService.Create(customer);
+                return new OkObjectResult(customer);
+            }
+            catch (ValidationException) { }
+
+            return new BadRequestResult();
         }
 
         [HttpPut("{id}")]
