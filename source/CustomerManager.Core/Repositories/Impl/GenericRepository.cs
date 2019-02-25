@@ -34,8 +34,7 @@ namespace CustomerManager.Core.Repositories.Impl
         #region IGenericRepository Members
 
         public virtual async Task Create(TEntity entity)
-        {
-            entity.DateCreated = DateTime.Now;
+        {            
             await _dbCollection.InsertOneAsync(entity);
         }
 
@@ -59,8 +58,7 @@ namespace CustomerManager.Core.Repositories.Impl
         }
 
         public virtual async Task<bool> Update(TEntity entity)
-        {
-            entity.DateUpdated = DateTime.Now;
+        {            
             var filter = Builders<TEntity>.Filter.Eq(x => x.Id, entity.Id);
             var result = await _dbCollection.ReplaceOneAsync(filter, entity);            
 

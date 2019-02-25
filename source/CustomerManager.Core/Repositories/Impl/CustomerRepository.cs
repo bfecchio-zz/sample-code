@@ -3,7 +3,7 @@ using CustomerManager.Core.Entities;
 
 namespace CustomerManager.Core.Repositories.Impl
 {
-    public class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
+    public sealed class CustomerRepository : GenericRepository<Customer>, ICustomerRepository
     {
         #region Constructors
 

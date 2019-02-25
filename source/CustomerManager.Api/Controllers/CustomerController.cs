@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CustomerManager.Core.Entities;
-using CustomerManager.Core.Repositories;
+using CustomerManager.Core.Services;
 
 namespace CustomerManager.Api.Controllers
 {
@@ -12,15 +12,15 @@ namespace CustomerManager.Api.Controllers
     {
         #region Private Read-Only Fields
 
-        private readonly ICustomerRepository _customerRepository;
+        private readonly ICustomerService _customerService;
 
         #endregion
 
         #region Constructors
 
-        public CustomerController(ICustomerRepository customerRepository)
+        public CustomerController(ICustomerService customerService)
         {
-            _customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+            _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
         }
 
         #endregion
@@ -30,14 +30,14 @@ namespace CustomerManager.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _customerRepository.GetAll();
+            var result = await _customerService.GetAll();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var result = await _customerRepository.Get(id);
+            var result = await _customerService.Get(id);
             if (result != null) return Ok(result);
 
             return NotFound();
@@ -46,20 +46,20 @@ namespace CustomerManager.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Customer customer)
         {
-            await _customerRepository.Create(customer);
+            await _customerService.Create(customer);
             return new OkObjectResult(customer);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(string id, [FromBody]Customer customer)
         {
-            var entity = await _customerRepository.Get(id);
+            var entity = await _customerService.Get(id);
             if (entity == null) return NotFound();
 
             customer.Id = entity.Id;
             customer.DateCreated = entity.DateCreated;
 
-            await _customerRepository.Update(customer);
+            await _customerService.Update(customer);
 
             return new OkObjectResult(customer);
         }
@@ -67,10 +67,10 @@ namespace CustomerManager.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var entity = await _customerRepository.Get(id);
+            var entity = await _customerService.Get(id);
             if (entity == null) return NotFound();
             
-            await _customerRepository.Delete(id);
+            await _customerService.Delete(id);
 
             return Ok();
         }
