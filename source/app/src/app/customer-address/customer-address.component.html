@@ -1,0 +1,23 @@
+<div>  
+    <div *ngFor="let item of addresses" class="form-group row">
+      <div class="form-group col-5 offset-3 mb-1">
+        <input [(ngModel)]="item.address" class="form-control">
+      </div>
+      <div class="form-group col-3 mb-1">
+        <select id="type" name="type" [(ngModel)]="item.type" class="form-control">        
+          <option value="0">Indefinido</option>
+          <option value="1">Comercial</option>
+          <option value="2">Residêncial</option>
+          <option value="3">Outros</option>
+        </select>
+      </div>
+      <div class="form-group col-1 mb-1">
+        <button type="button" class="btn btn-danger btn-sm mt-1" (click)="deleteAddress(item)"><i class="fas fa-trash-alt"></i></button>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-9 offset-3">
+        <button type="button" class="btn btn-success btn-sm" (click)="addAddress()"><i class="fas fa-map"></i> Novo Endereço</button>
+      </div>
+    </div>
+  </div>

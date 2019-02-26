@@ -1,0 +1,52 @@
+<div class="table-resposive">
+  <form>
+    <div class="form-group form-inline">
+      Pesquisar pelo nome: <input class="form-control ml-2" type="text" name="searchTerm"
+        [(ngModel)]="tableService.searchTerm" />
+      <span class="ml-3" *ngIf="tableService.loading$ | async">Carregando...</span>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" sortable="name" (sort)="onSort($event)">Nome</th>
+          <th scope="col">Data Nascimento</th>
+          <th scope="col">RG</th>
+          <th scope="col">CPF</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of customers$ | async">
+          <td>
+            <ngb-highlight [result]="customer.name" [term]="tableService.searchTerm"></ngb-highlight>
+          </td>
+          <td>{{ customer.birthday | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ customer.documentId }}</td>
+          <td>{{ customer.socialSecurityId }}</td>
+          <td class="text-center">
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-primary" (click)="editCustomer(customer)">
+                <i class="fas fa-user-edit"></i>
+              </button>
+              <button type="button" class="btn btn-danger" (click)="deleteCustomer(customer)">
+                <i class="fas fa-user-minus"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between p-2">
+      <ngb-pagination [collectionSize]="total$ | async" [(page)]="tableService.page" [pageSize]="tableService.pageSize">
+      </ngb-pagination>
+
+      <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="tableService.pageSize">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="30">30</option>
+      </select>
+    </div>
+  </form>
+</div>
